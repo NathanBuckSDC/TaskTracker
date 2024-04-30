@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>
-      {% if title %}
-        {{title}}
+      {% if webServiceData['APPNAME'] %}
+        {{webServiceData['APPNAME']}} - {{pagename}}
       {% else %}
         TaskTracker TitleElement
       {% endif %}

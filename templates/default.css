@@ -6,13 +6,40 @@
   body {
     font-family: CascadiaCode;
     background: rgb(33,33,33);
+    color: rgb(240,240,240);
   }
-
   #page_container {
     background: rgb(66,66,66);
-    color: rgb(222,222,222)
-    max-width: 720px;
-    max-height: 100%;
-    margin: 0 100 0 auto;
+    color: rgb(222,222,222);
+    max-width: 1000px;
+    margin: 0 100px;
+    padding: 5px 10px 5px 10px;
   }
+
+  #header-bar {
+    background-color: rgb(0,200,130);
+    width: 100%;
+    display: flex;
+    max-width: 1000px;
+    margin: 0 100px;
+    padding: 5px 10px 5px 10px;
+  }
+  .header-spacer {
+    width: 100%;
+  }
+  .header-item {
+    padding: 2px 10px;
+    font-size:medium;
+  }
+  .header-item a:link, a:visited {
+    color: rgb(33,33,33);
+    font-weight: Bold;
+    text-decoration: none;
+  }
+  .header-item a:hover {
+    font-weight: Bold;
+    color: rgb(0,255,255);
+    text-decoration: underline;
+  }
+
 </style>

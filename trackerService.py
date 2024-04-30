@@ -121,6 +121,7 @@ def loadConfig():
   return True
   
 def validateConfig():
+  global trackerConfig
   # Validate that trackerConfig has all expected values
   badConfig = False
   for trackerConfigValue in trackerConfigValues:
@@ -130,7 +131,9 @@ def validateConfig():
   if badConfig:
     print(f'Please re-run setup or correct the configuration in \n\t{os.path.abspath(trackerConfigFile)}')
     stopexec('Unable to proceed due to missing configuration values.')
-  return False
+  
+  # TODO Add additional validation for email addresses and stuff later
+  return True
 
 def saveConfig():
   global trackerConfig
@@ -216,8 +219,9 @@ def start_setup(firstCall=True):
   
   print('-')
   print('Settings Values:')
-  print(f' Worker:\t{workerName} {workerEmail}')
-  print(f'Manager:\t{managerName} {managerEmail}')
+  print(f'ServerListen:\thttp://{ipAddr}:{port}')
+  print(f'      Worker:\t{workerName} {workerEmail}')
+  print(f'     Manager:\t{managerName} {managerEmail}')
   print(f'Minimum pending activities to send for reports: {minActivitiesToSend}')
   response = input('\nAre these settings correct? (y/N) ')
   if not response:
@@ -256,8 +260,16 @@ def show_cmdline_usage(errMsg=None):
   exit()
 
 
-
+##############################################################################################
+# FLASK WEB SERVICE DEFINITIONS AND ROUTES
 webService = Flask(__name__)
+
+@webService.route('/')
+def wwwOut_main():
+  global webServiceData
+  return render_template('main.html', webServiceData=webServiceData, pagename="Main")
+
+
 
 ##############################################################################################
 # RUNTIME 
@@ -289,7 +301,7 @@ if __name__ == '__main__':
   loadConfig()
 
   # Start the web service
-  
+  webService.run(host=trackerConfig['ipAddr'],port=trackerConfig['port'],debug=True)
 
 
 
