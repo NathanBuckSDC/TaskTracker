@@ -321,9 +321,11 @@ def saveNewTrackerItem(data):
   if not trackerItems:
     trackerItems = []
   trackerItems.append(trackerItem)
+  vardump(trackerItem)
+
   with open(trackerDataFile,'w') as dataFile:
     dataFile.write(json.dumps(trackerItems,indent=2))
-  return True
+  return trackerItem['itemId']
 
 
 

@@ -1,5 +1,6 @@
 #### Project specific ignores / Don't include config or data files
 trackerConfig.json
+trackerData.json
 
 
 ##### Generic Python based gitignore
