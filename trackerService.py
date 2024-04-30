@@ -8,7 +8,7 @@ VERSION='0.1.0'
 ##################################################################################
 # IMPORTS
 # Flask web service imports
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, send_from_directory
 # Basic Functionality
 import os, json, datetime, time, sys
 # Data management and assistance
@@ -263,6 +263,11 @@ def show_cmdline_usage(errMsg=None):
 ##############################################################################################
 # FLASK WEB SERVICE DEFINITIONS AND ROUTES
 webService = Flask(__name__)
+
+# favicon redirect
+@webService.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(webService.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @webService.route('/')
 def wwwOut_main():
