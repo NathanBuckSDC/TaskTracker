@@ -91,6 +91,15 @@ def stopexec(msg,exitcode=99):
   ## Just in case, finish with a hard exit, even though this line should never get processed
   exit(1)
 
+def get_timestamp_by_minute():
+  s = "%Y%m%d%H%M"
+  ts = time.mktime(datetime.datetime.strptime(time.strftime(s),s).timetuple())
+  ts = int(ts)
+  return ts
+
+def get_datestr(ts,dateFmtStr='%Y-%m-%d %H:%M'):
+  return datetime.datetime.fromtimestamp(ts).strftime(dateFmtStr)
+
 def vardump(thisObj):
   print(json.dumps(thisObj,indent=2))
 
@@ -259,6 +268,74 @@ def show_cmdline_usage(errMsg=None):
     print()
   exit()
 
+##############################################################################################
+# FUNCTIONS Tracker Data Activity Management
+# trackerDataFile
+
+def getTrackerData():
+  global trackerConfig
+  loadConfig()
+  if not os.path.isfile(trackerDataFile):
+    dmesg('Missing tracker data file - Creating a new, empty data file')
+    with open(trackerDataFile,'w') as dataFile:
+      dataFile.write('{}\n')
+  # Load the trackerData directly as json
+  try:
+    with open(trackerDataFile,'r') as dataFile:
+      trackerData = json.load(dataFile)
+  except Exception as e:
+    die(f'Encountered error while trying to load tracker data file: {os.path.abspath(trackerDataFile)} - File may be corrupted and require correction or removal.')
+  dmesg(f'Loaded {len(trackerData)} data items from {trackerDataFile}')
+  if len(trackerData) < 1:
+    trackerData = False
+  return trackerData
+
+def emptyTrackerItem():
+  trackerItem = {
+    'itemId': '',
+    'itemTag': '',
+    'itemTicket': '',
+    'itemTime': '',
+    'itemDesc': '',
+  }
+  return trackerItem
+
+def saveNewTrackerItem(data):
+  # create empty tracker item data structure
+  trackerItem = {
+    'itemId': None,
+    'itemTime': None,
+    'itemTag': None,
+    'itemTicket': None,
+    'itemDesc': None,
+    'itemSent': False,
+    'itemSentTime': None
+  }
+  # Find next available item ID
+  trackerItem['itemId'] = getNextTrackerItemId()
+  trackerItem['itemTime'] = get_timestamp_by_minute()
+  trackerItem['itemTag'] = data['itemTag']
+  trackerItem['itemTicket'] = data['itemTicket']
+  trackerItem['itemDesc'] = data['itemDesc']
+  trackerItems = getTrackerData()
+  if not trackerItems:
+    trackerItems = []
+  trackerItems.append(trackerItem)
+  with open(trackerDataFile,'w') as dataFile:
+    dataFile.write(json.dumps(trackerItems,indent=2))
+  return True
+
+
+
+def getNextTrackerItemId():
+  trackerItems = getTrackerData()
+  highestItemId = 0
+  if trackerItems:
+    for trackerItem in trackerItems:
+      if trackerItem['itemId'] > highestItemId:
+        highestItemId = trackerItem['itemId']
+  return highestItemId + 1
+
 
 ##############################################################################################
 # FLASK WEB SERVICE DEFINITIONS AND ROUTES
@@ -269,12 +346,38 @@ webService = Flask(__name__)
 def favicon():
     return send_from_directory(os.path.join(webService.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
+# Main Page route definition
 @webService.route('/')
 def wwwOut_main():
   global webServiceData
-  return render_template('main.html', webServiceData=webServiceData, pagename="Main")
+  trackerData = getTrackerData()
+  resultMsg = stageResultMsg()
+  return render_template('main.html', webServiceData=webServiceData, pagename="Main",
+      trackerData=trackerData, trackerItem=emptyTrackerItem(),resultMsg=resultMsg)
 
+@webService.route('/newitem',methods=['POST'])
+def wwwIn_newitem():
+  global webServiceData
+  data = request.form
+  # validate data
+  if not data['itemTag'] or not data['itemDesc']:
+    webServiceData['resultMsg'] = 'Category and Description are required fields, only ticket is optional.'
+  else:
+    newItemId = saveNewTrackerItem(data)
+    if not newItemId:
+      webServiceData['resultMsg'] = 'Error encountered while trying to save new item, see service logs for details.'
+    else:
+      webServiceData['resultMsg'] = f'New activity item {newItemId} added and set to pending transmission.'
+  return redirect('/',code=302)
 
+def stageResultMsg():
+  global webServiceData
+  resultMsg = False
+  if 'resultMsg' in webServiceData.keys():
+    if webServiceData['resultMsg']:
+      resultMsg = webServiceData['resultMsg']
+  webServiceData['resultMsg'] = False
+  return resultMsg
 
 ##############################################################################################
 # RUNTIME 
@@ -305,6 +408,8 @@ if __name__ == '__main__':
   #   configuration has become corrupted.  Attempt to load the config
   loadConfig()
 
+  trackerData = getTrackerData()
+  
   # Start the web service
   webService.run(host=trackerConfig['ipAddr'],port=trackerConfig['port'],debug=True)
 
