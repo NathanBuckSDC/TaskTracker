@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      {% if title %}
+        {{title}}
+      {% else %}
+        TaskTracker TitleElement
+      {% endif %}
+    </title>
+    {% include 'default.css' %}
+  </head>
+  <body>

@@ -1,2 +1,8 @@
 # TaskTracker
-Work logging and activity tracker for the purposes of automating and assisting with regular manager reporting
+Work activity and task tracking assistant for automated manager summary reporting
+
+#### Requirements
+- Linux/Unix/MacOS / Posix type OS (Not tested on Windows)
+- Python3
+- Depends on flask for web services
+  - `pip3 install flask`
