@@ -31,7 +31,16 @@
   </div>
   <div class="activities">
     <h2>Activites Pending Send&gt;&gt;</h2>
-    <p>Activity list goes here</p>
+    {% if trackerData %}
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Tag/Ticket</th>
+          <th>Activity Description</th>
+        <tr>
+      </table>
+      <p>There is some tracker data</p>
+    {% endif %}
   </div>
 </div>
 
