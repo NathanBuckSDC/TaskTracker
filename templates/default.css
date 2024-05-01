@@ -4,7 +4,7 @@
     src: url("/static/CascadiaCode.woff2");
     }
   body {
-    font-family: CascadiaCode;
+    font-family: CascadiaCode, Consolas;
     background: rgb(66,66,66);
     color: rgb(240,240,240);
   }
@@ -58,10 +58,6 @@
     vertical-align: center;
   }
 
-  .activities h2 {
-    font-size: 1.1em;
-    margin: 0 0 0 0;
-  }
 
   label {
     display: block;
@@ -92,5 +88,50 @@
     width: 90%
   }
   
+  .activities table {
+    display: block;
+    width: 100%;
+    font-family: Verdana, sans-serif;
+    font-size: 0.8em;
+    border-collapse: collapse;
+    border-spacing: 0;
+    padding: 5px 5px;
+  }
+
+  .activities h2 {
+    font-size: 1.1em;
+    margin: 0 0 0 0;
+  }
+  .activities table {
+    margin: 0 0 0 0;
+  }
+  .activities tr {
+    vertical-align: top;
+  }
+  .activities th {
+    color: rgb(220,220,220);
+    background-color: rgb(50,100,150);
+    font-weight: bold;
+    border: solid 1px rgb(150,150,150);
+    text-align: left;
+  }
+  .activities td {
+    border: solid 1px rgb(150,150,150);
+    background-color: rgb(240,240,240);
+  }
+
+  .dataTime td {
+    width: 400px;
+  }
+
+  .trackerHeader {
+    display: block;
+    font-weight: Bold;
+    padding: 2px 5px;
+  }
+  .trackerItem {
+    display: block;
+    padding: 2px 5px;
+  }
 
 </style>

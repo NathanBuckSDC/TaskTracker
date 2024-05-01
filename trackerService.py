@@ -3,7 +3,7 @@
 # - 
 APPNAME='TaskTracker'
 APPDESC='Work task and activity tracker for manager work reporting and summarization'
-VERSION='0.1.0'
+VERSION='0.2.0'
 
 ##################################################################################
 # IMPORTS
@@ -305,6 +305,8 @@ def saveNewTrackerItem(data):
   trackerItem = {
     'itemId': None,
     'itemTime': None,
+    'itemDate': None,
+    'itemDateTime': None,
     'itemTag': None,
     'itemTicket': None,
     'itemDesc': None,
@@ -317,6 +319,8 @@ def saveNewTrackerItem(data):
   trackerItem['itemTag'] = data['itemTag']
   trackerItem['itemTicket'] = data['itemTicket']
   trackerItem['itemDesc'] = data['itemDesc']
+  trackerItem['itemDate'] = get_datestr(trackerItem['itemTime'],'%a-%m-%d')
+  trackerItem['itemDateTime'] = get_datestr(trackerItem['itemTime'])
   trackerItems = getTrackerData()
   if not trackerItems:
     trackerItems = []

@@ -2,7 +2,7 @@
 {% include "header-bar.html" %}
 <div id="page_container">
   <div class="new-item">
-    <h2>New Activity&gt;&gt;</h2>
+    <h2>New Activity &gt;</h2>
     <form action="/newitem" method="post">
       <input type="hidden" name="itemId" id="itemId" value="{{trackerItem["itemId"]}}">
       <table>
@@ -29,15 +29,20 @@
       </table>
     </form>
   </div>
+  <hr style="border-top: 1px solid rgb(99,99,99);"/>
   <div class="activities">
-    <h2>Activites Pending Send&gt;&gt;</h2>
+    <h2>Activites Pending Send &gt;</h2>
     {% if trackerData %}
       <table>
         <tr>
-          <th>ID</th>
-          <th>Tag/Ticket</th>
-          <th>Activity Description</th>
-        <tr>
+          <th><div class="trackerHeader">ID</div></th>
+          <th><div class="trackerHeader">DateTime</div></th>
+          <th><div class="trackerHeader">Tag/Ticket</div></th>
+          <th><div class="trackerHeader">Activity Description</div></th>
+        </tr>
+        {% for trackerItem in trackerData %}
+          {% include "_trackeritem.html" %}
+        {% endfor%}
       </table>
       <p>There is some tracker data</p>
     {% endif %}
