@@ -29,6 +29,7 @@ trackerConfigValues = [
   'ipAddr', 'port', 
   'workerName', 'workerEmail', 
   'managerName','managerEmail',
+  'smtpServer',
   'minActivitiesToSend','daysOfWeekToSend',
   'lastSentId', 'lastSentTime','lastSentFirstId'
 ]
@@ -218,6 +219,12 @@ def start_setup(firstCall=True):
   if not managerEmail:
     stopexec(f'Manager Email address is required.')
   print()
+
+  print(f'\n{APPNAME} currently only supports sending of work reports via plain SMTP')
+  print(f'on port 25. TLS and Authenticated SMTP are not supported at this time.')
+  smtpServer = input('SMTP relay server > ')
+  print()
+
   print('Enter minimum number of activities required to generate a manager email.')
   print('The default value is 3.')
   minActivitiesToSend = input('> ')
@@ -231,6 +238,7 @@ def start_setup(firstCall=True):
   print(f'ServerListen:\thttp://{ipAddr}:{port}')
   print(f'      Worker:\t{workerName} {workerEmail}')
   print(f'     Manager:\t{managerName} {managerEmail}')
+  print(f'  SMTP Relay:\t{smtpServer}')
   print(f'Minimum pending activities to send for reports: {minActivitiesToSend}')
   response = input('\nAre these settings correct? (y/N) ')
   if not response:
@@ -247,6 +255,7 @@ def start_setup(firstCall=True):
   trackerConfig['workerEmail'] = workerEmail
   trackerConfig['managerName'] = managerName
   trackerConfig['managerEmail'] = managerEmail
+  trackerConfig['smtpServer'] = smtpServer
   trackerConfig['minActivitiesToSend'] = minActivitiesToSend
   
   # Trigger the config save and return a good status
@@ -359,7 +368,7 @@ def wwwOut_main():
   trackerData = getTrackerData()
   resultMsg = stageResultMsg()
   return render_template('main.html', webServiceData=webServiceData, pagename="Main",
-      trackerData=trackerData, trackerItem=emptyTrackerItem(),resultMsg=resultMsg)
+      trackerData=trackerData, trackerConfig=trackerConfig, trackerItem=emptyTrackerItem(),resultMsg=resultMsg)
 
 @webService.route('/newitem',methods=['POST'])
 def wwwIn_newitem():

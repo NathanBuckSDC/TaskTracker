@@ -1,0 +1,28 @@
+  <div class="new-item">
+    <h2>New Activity &gt;</h2>
+    <form action="/newitem" method="post">
+      <input type="hidden" name="itemId" id="itemId" value="{{trackerItem["itemId"]}}">
+      <table>
+        <tr>
+          <td>
+            <label for="itemTag">Category/Tag:</label>
+              <input type=text id="itemTag" name="itemTag" value="{{trackerItem["itemTag"]}}" style="width:300px;">
+          </td>
+          <td>
+            <label for="itemTicket">Ticket#:</label>
+              <input type=text id="itemTicket" name="itemTicket" value="{{trackerItem["itemTicket"]}}" style="width:300px;">
+          </td>
+          <td>
+          </td>
+        </tr>
+        <tr>
+          <td colspan=2>
+            <label for="itemDesc">Activity Description#:</label>
+              <textarea id="itemDesc" name="itemDesc"rows=3 cols=100>{{trackerItem["itemDesc"]}}</textarea>
+          </td>
+          <td>
+            <input type=submit name=submit>
+        </tr>
+      </table>
+    </form>
+  </div>
